@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .text-stroke {
+    -webkit-text-stroke: 1px #f2e8c6;
+  }
+  .primary {
+    color: #800000;
+  }
+  .custom-underline {
+    position: relative;
+  }
+  .custom-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    border-bottom: 1px dotted;
+    height: 1px;
+  }
+}

@@ -1,7 +1,10 @@
 import './App.scss';
 import { Helmet } from 'react-helmet';
 import Footer from './Footer';
-import { useEffect, useReducer } from 'react';
+import { useReducer } from 'react';
+import image2 from '../public/image2.png';
+import image from '../public/image.png';
+import './index.css';
 
 const initialState = {
   date1: '2021-07',
@@ -12,7 +15,7 @@ const initialState = {
   price2: null,
   ticker: 'GAZP',
   index: null,
-  status: '', //loading, loaded, error
+  status: 'initial', //loading, loaded, error
 };
 
 function reducer(state, action) {
@@ -26,6 +29,11 @@ function reducer(state, action) {
       return {
         ...state,
         status: 'loading',
+        newDate1: initialState.newDate1,
+        newDate2: initialState.newDate2,
+        price1: initialState.price1,
+        price2: initialState.price2,
+        index: initialState.index,
       };
     case 'setDate1':
       return {
@@ -57,13 +65,23 @@ function reducer(state, action) {
         price2: action.payload.price2,
         newDate2: action.payload.newDate2,
         index: action.payload.index,
-        // status: action.payload.status,
+        status: state.status === 'loading' ? 'loaded' : 'loadedWithError',
+      };
+    case 'successfull':
+      return {
+        ...state,
         status: 'loaded',
       };
-    case 'error':
+    case 'loadedWithError':
       return {
         ...state,
         status: 'loadedWithError',
+        message: action.payload,
+      };
+    case 'fatalError':
+      return {
+        ...state,
+        status: 'fatalError',
         message: action.payload,
       };
     default:
@@ -92,46 +110,58 @@ function App() {
 
   async function getMoexTickerData(ticker, date1, date2) {
     async function get(link, date) {
-      link += date;
-      console.log(link);
-      let res = await fetch(link);
-      let data = await res.json();
-      let price = data.securities.data.find(
-        (e) => e[0] === ticker && e[2] === 'MRKT'
-      )?.[4];
-      if (price) {
-        return [price, date];
-      } else {
+      try {
+        link += date;
+        // console.log(link);
+        let res = await fetch(link);
+        let data;
+        data = await res.json();
+        let price = data.securities.data.find(
+          (e) => e[0] === ticker && e[2] === 'MRKT'
+        )?.[4];
+        if (price) {
+          return [price, date];
+        } else {
+          return [null, null];
+        }
+      } catch (error) {
         return [null, null];
       }
     }
 
     async function searchDate(link, date) {
       let direction = 'forward';
+      if (date.length === 6) {
+        date = date.slice(0, -1) + '0' + date.slice(-1);
+        console.log(date);
+      }
       if (date.length === 7) {
         date += '-01';
       } else if (+date.slice(-2) > 15) {
         direction = 'back';
       }
-      for (let i = 1; i < 9; i++) {
+      for (let i = 1; i <= 6; i++) {
         const [price, newDate] = await get(link, date);
+        console.log('try ', date, ': ', price);
         if (price && newDate) {
+          console.log('luck! ', newDate, ': ', price);
           return [price, newDate];
         }
         let lastTwoChars = +date.slice(-2);
         if (direction === 'back') {
-          let newLastTwoChars = lastTwoChars - 1;
+          let newLastTwoChars = lastTwoChars - 2;
           date =
             date.slice(0, -2) + newLastTwoChars.toString().padStart(2, '0');
         } else {
-          let newLastTwoChars = lastTwoChars + 1;
+          let newLastTwoChars = lastTwoChars + 2;
           date =
             date.slice(0, -2) + newLastTwoChars.toString().padStart(2, '0');
         }
-        if (i === 8) {
+        if (i >= 6) {
           // throw new Error(`Данные за ${date.slice(-2)} не найдены`);
-          // dispatch({ type: 'error', payload: 'noData' });
+          dispatch({ type: 'loadedWithError', payload: 'noData' });
           console.log(`Данные за ${date.slice(0, -3)} не найдены`);
+          // console.log('date', date);
           return [null, date];
         }
       }
@@ -139,34 +169,38 @@ function App() {
 
     try {
       dispatch({ type: 'loading' });
-
+      console.log('date1', date1);
+      console.log('date2', date2);
       const [price1, newDate1] = await searchDate(
         `${BASE_URL}/totals/securities.json?date=`,
         date1
       );
-      console.log('price1 ', price1);
+      console.log('price1: ', price1);
       const [price2, newDate2] = await searchDate(
         `${BASE_URL}/totals/securities.json?date=`,
         date2
       );
-      console.log('price2 ', price2);
-
-      let index = await indexFunc(newDate1, newDate2);
-
-      dispatch({
-        type: 'setPrices',
-        payload: {
-          price1: price1,
-          newDate1: newDate1,
-          price2: price2,
-          newDate2: newDate2,
-          index: index,
-          // status: status === 'loading' ? 'loaded' : 'loadedWithError',
-        },
-      });
+      console.log('price2: ', price2);
+      console.log('newdates: ', newDate1, newDate2);
+      try {
+        let index = await indexFunc(newDate1, newDate2);
+        dispatch({
+          type: 'setPrices',
+          payload: {
+            price1: price1,
+            newDate1: newDate1,
+            price2: price2,
+            newDate2: newDate2,
+            index: index,
+          },
+        });
+      } catch (error) {
+        console.log('index: ', index);
+        dispatch({ type: 'fatalError', payload: 'Фатальная ошибка' });
+      }
     } catch (err) {
       dispatch({
-        type: 'error',
+        type: 'loadedWithError',
         payload: err.message,
         // todo СЕЙЧАС ВСЕ РАБОТАЕТ НЕПРАВИЛЬНО, НУЖНО СДЕЛАТЬ УЛЬТИМАТИВНУЮ ОШИБКУ ЕСЛИ НЕ НАХОДИТСЯ ОДНА ИЗ ДАТ
       });
@@ -178,26 +212,27 @@ function App() {
       `${BASE_URL}/markets/index/securities.json?date=${newDate1}`
     );
     let data = await res.json();
-    const price1 = data.history.data.find((e) => e[1] === 'IMOEX')?.[7];
-    console.log(price1);
+    const indPrice1 = data.history.data.find((e) => e[1] === 'IMOEX')?.[7];
+    // console.log(price1);
 
     res = await fetch(
       `${BASE_URL}/markets/index/securities.json?date=${newDate2}`
     );
     data = await res.json();
-    const price2 = data.history.data.find((e) => e[1] === 'IMOEX')?.[7];
+    const indPrice2 = data.history.data.find((e) => e[1] === 'IMOEX')?.[7];
+    // console.log(price2);
+    let index;
 
-    let index = (((+price2 - +price1) / price1) * 100).toFixed(2);
-    if (isNaN(index)) {
-      index = undefined;
-    }
+    if (indPrice1 && indPrice2) {
+      index = (((+indPrice2 - +indPrice1) / indPrice1) * 100).toFixed(2);
+    } else return undefined;
 
     return index;
   }
 
-  useEffect(() => {
-    getMoexTickerData(ticker, date1, date2);
-  }, []);
+  // useEffect(() => {
+  //   getMoexTickerData(ticker, date1, date2);
+  // }, []);
 
   const difference = (((+price2 - +price1) / price1) * 100).toFixed(2);
 
@@ -209,44 +244,63 @@ function App() {
         <meta name="keywords" content="!!!" />
       </Helmet>
       <main>
-        <div className="display">
-          {status === 'loading' && <p>Loading...</p>}
-          {status === 'error' && <p>{message}</p>}
+        <div className="display grid justify-center content-center items-center">
+          {status === 'initial' && (
+            <img src={image2} className="h-3/5 justify-self-center" />
+          )}
+          {status === 'loading' && (
+            <div className="h-full relative flex items-center justify-center">
+              <p className="absolute flex items-center justify-center inset-0 text-stroke primary text-4xl">
+                Загрузка...
+              </p>
+              <img src={image2} className="h-3/5 justify-self-center" />
+            </div>
+          )}
+          {status === 'fatalError' && (
+            <div className="grid place-items-center place-content-center">
+              <img src={image} className="h-5/6 justify-self-center" />
+              <h2 className="text-2xl">{message}</h2>
+            </div>
+          )}
           {(status === 'loaded' || status === 'loadedWithError') && (
             <>
               <p>
                 Стоимость <span className="blue">{ticker}</span> на {newDate1}:{' '}
                 {price1 ? (
-                  <span className="blue">{price1}</span>
+                  <>
+                    <span className="blue">{price1}</span>
+                    <span className="small">₽</span>
+                  </>
                 ) : (
-                  <span style={{ color: 'red' }}>Нет данных!</span>
+                  <span className="red">Нет данных!</span>
                 )}
                 <br />
                 <span className="hide">Стоимость {ticker} </span>на {newDate2}:{' '}
                 {price2 ? (
-                  <span className="blue">{price2}</span>
+                  <>
+                    <span className="blue">{price2}</span>
+                    <span className="small">₽</span>
+                  </>
                 ) : (
-                  <span style={{ color: 'red' }}>Нет данных!</span>
+                  <span className="red">Нет данных!</span>
                 )}
               </p>
               <p>
                 Разница:{' '}
                 {price1 && price2 ? (
-                  <span style={{ color: difference < 0 ? 'red' : 'green' }}>
+                  <span className={difference < 0 ? 'red' : 'green'}>
                     {difference}%
                   </span>
                 ) : (
-                  <span style={{ color: 'red' }}>Нет данных!</span>
+                  <span className="red">Нет данных!</span>
                 )}
               </p>
               <p>
                 Индекс Мосбиржи:{' '}
                 {index ? (
-                  <span style={{ color: index < 0 ? 'red' : 'green' }}>
-                    {index}%
-                  </span>
+                  <span className={index < 0 ? 'red' : 'green'}>{index}%</span>
                 ) : (
-                  <span style={{ color: 'red' }}>Нет данных!</span>
+                  <span className="red">Нет данных!</span>
                 )}
                 {/* <br />
               BTC:{' '}
@@ -291,10 +345,29 @@ function App() {
                 }
               ></input>
             </div>
-            <p>Введите месяц (2022-05) или день (2022-05-05)</p>
+            <p className="instruction">
+              Введите месяц (2022-05) или день (2022-05-05)
+            </p>
             <button onClick={() => getMoexTickerData(ticker, date1, date2)}>
               Get Price
             </button>
+            {status === 'loadedWithError' && (
+              <p>
+                Возможные причины ошибок:
+                <br />
+                1. Тикер не существовал в указанную дату
+                <br />
+                2. API не дает слишком ранние даты ☹
+                <br />
+                3. Рынок не работал в запрашиваемый{' '}
+                <span
+                  title="Для тикера проверяется 10 ближайших дней; «Индекс Мосбиржи» проверяет всего одну дату!"
+                  className="custom-underline"
+                >
+                  период
+                </span>
+              </p>
+            )}
           </form>
         </div>
       </main>
