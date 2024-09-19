@@ -244,7 +244,7 @@ function App() {
         <meta name="keywords" content="!!!" />
       </Helmet>
       <main className="h-dvh max-w-xl m-auto relative flex flex-col items-center justify-center">
-        <div className="display grid min-h-[25%] w-4/5 shadow-md m-3 p-4">
+        <div className="display grid min-h-[30%] w-4/5 shadow-md m-3 p-4">
           {status === 'initial' && (
             <div className="relative h-full flex items-center justify-center">
               <img
