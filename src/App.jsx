@@ -243,28 +243,38 @@ function App() {
         <meta name="description" content="!!!" />
         <meta name="keywords" content="!!!" />
       </Helmet>
-      <main>
-        <div className="display grid justify-center content-center items-center">
+      <main className="h-dvh max-w-xl m-auto relative flex flex-col items-center justify-center">
+        <div className="display grid min-h-[25%] w-4/5 shadow-md m-3 p-4">
           {status === 'initial' && (
-            <img src={image2} className="h-3/5 justify-self-center" />
+            <div className="relative h-full flex items-center justify-center">
+              <img
+                src={image2}
+                className="absolute h-full justify-self-center"
+              />
+            </div>
           )}
           {status === 'loading' && (
-            <div className="h-full relative flex items-center justify-center">
-              <p className="absolute flex items-center justify-center inset-0 text-stroke primary text-4xl">
+            <div className="relative h-full flex items-center justify-center">
+              <img
+                src={image2}
+                className="absolute h-full justify-self-center"
+              />
+              <p className="z-10 flex items-center justify-center inset-0 text-stroke primary text-4xl">
                 Загрузка...
               </p>
-              <img src={image2} className="h-3/5 justify-self-center" />
             </div>
           )}
           {status === 'fatalError' && (
-            <div className="grid place-items-center place-content-center">
-              <img src={image} className="h-5/6 justify-self-center" />
-              <h2 className="text-2xl">{message}</h2>
+            <div className="flex flex-col relative">
+              <div className="relative flex items-center justify-center h-full">
+                <img src={image} className="absolute h-full" />
+              </div>
+              <p className="text-2xl text-center">{message}</p>
             </div>
           )}
           {(status === 'loaded' || status === 'loadedWithError') && (
-            <>
-              <p>
+            <div className="m-auto">
+              <p className="my-1">
                 Стоимость <span className="blue">{ticker}</span> на {newDate1}:{' '}
                 {price1 ? (
                   <>
@@ -275,7 +285,8 @@ function App() {
                   <span className="red">Нет данных!</span>
                 )}
                 <br />
-                <span className="hide">Стоимость {ticker} </span>на {newDate2}:{' '}
+                <span className="invisible">Стоимость {ticker} </span>на{' '}
+                {newDate2}:{' '}
                 {price2 ? (
                   <>
                     <span className="blue">{price2}</span>
@@ -285,7 +296,7 @@ function App() {
                   <span className="red">Нет данных!</span>
                 )}
               </p>
-              <p>
+              <p className="my-1">
                 Разница:{' '}
                 {price1 && price2 ? (
                   <span className={difference < 0 ? 'red' : 'green'}>
@@ -295,7 +306,7 @@ function App() {
                   <span className="red">Нет данных!</span>
                 )}
               </p>
-              <p>
+              <p className="my-1">
                 Индекс Мосбиржи:{' '}
                 {index ? (
                   <span className={index < 0 ? 'red' : 'green'}>{index}%</span>
@@ -313,14 +324,14 @@ function App() {
                 {sp500}%
               </span> */}
               </p>
-            </>
+            </div>
           )}
         </div>
 
-        <div className="form">
+        <div className="form grid m-3 p-4 w-4/5 min-h-[25%] shadow-md">
           <form onSubmit={(e) => e.preventDefault()}>
-            <div className="form__inputs">
-              <p>Тикер</p>
+            <div className="form__inputs my-1 grid grid-cols-[max-content_auto] justify-center text-center">
+              <p className="mx-1 my-0.5 text-[15px]">Тикер</p>
               <input
                 type="text"
                 value={ticker}
@@ -328,7 +339,7 @@ function App() {
                   dispatch({ type: 'setTicker', payload: e.target.value })
                 }
               ></input>
-              <p>Дата 1</p>
+              <p className="mx-1 my-0.5 text-[15px]">Дата 1</p>
               <input
                 type="text"
                 value={date1}
@@ -336,7 +347,7 @@ function App() {
                   dispatch({ type: 'setDate1', payload: e.target.value })
                 }
               ></input>
-              <p>Дата 2</p>
+              <p className="mx-1 my-0.5 text-[15px]">Дата 2</p>
               <input
                 type="text"
                 value={date2}
@@ -345,28 +356,33 @@ function App() {
                 }
               ></input>
             </div>
-            <p className="instruction">
+            <p className="instruction text-center">
               Введите месяц (2022-05) или день (2022-05-05)
             </p>
-            <button onClick={() => getMoexTickerData(ticker, date1, date2)}>
+            <button
+              onClick={() => getMoexTickerData(ticker, date1, date2)}
+              className="block m-auto mt-2.5 py-2.5 px-5 rounded-lg transition"
+            >
               Get Price
             </button>
             {status === 'loadedWithError' && (
-              <p>
-                Возможные причины ошибок:
-                <br />
-                1. Тикер не существовал в указанную дату
-                <br />
-                2. API не дает слишком ранние даты ☹
-                <br />
-                3. Рынок не работал в запрашиваемый{' '}
-                <span
-                  title="Для тикера проверяется 10 ближайших дней; «Индекс Мосбиржи» проверяет всего одну дату!"
-                  className="custom-underline"
-                >
-                  период
-                </span>
-              </p>
+              <div className="flex justify-center mt-1.5">
+                <p>
+                  Возможные причины ошибок:
+                  <br />
+                  1. Тикер не существовал в указанную дату
+                  <br />
+                  2. API не дает слишком ранние даты ☹
+                  <br />
+                  3. Рынок не работал в запрашиваемый{' '}
+                  <span
+                    title="Для тикера проверяется 10 ближайших дней; «Индекс Мосбиржи» проверяет всего одну дату!"
+                    className="custom-underline"
+                  >
+                    период
+                  </span>
+                </p>
+              </div>
             )}
           </form>
         </div>
