@@ -12,8 +12,12 @@
   color: rgba(16, 16, 16);
   background-color: rgb(15, 15, 15);
   body {
-    background: linear-gradient(#680000 0%, #800000 14%);
-    background-color: #800000;
+    background: linear-gradient(
+      #680000 0%,
+      #800000 14%,
+      #800000 86%,
+      #680000 100%
+    );
     font-family: Calibri, Arial, Helvetica, sans-serif;
     margin: 0;
     align-items: center;
