@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet';
-import { Link } from 'react-router-dom';
+import Footer from './Footer';
 
 function About() {
   return (
@@ -8,32 +8,15 @@ function About() {
         <title>About</title>
         <meta name="description" content="Simple Do-Nothing App" />
       </Helmet>
-      <header>
-        <div className="links">
-          <div className="link link__github">
-            <a href="https://github.com/siebentod/nivritti">
-              Github{' '}
-              <i
-                className="fa-solid fa-arrow-up-right-from-square"
-                style={{ fontSize: '9px' }}
-              ></i>
-            </a>
-          </div>
-          <div className="link link__about">
-            <Link to="/">Home</Link>
-          </div>
-        </div>
-      </header>
-      <div className="about">
-        <div className="about__main">
-          <ul>
-            <li>
-              Simple Do-Nothing, Don&#39;t-Move-Your-Mouse, &#34;Meditation&#34;
-              App.
-            </li>
-          </ul>
-        </div>
+      <div className="flex flex-col justify-center items-center h-[100dvh]">
+        <p className="max-w-screen-sm text-white">
+          Сравнение стоимости акции (или другого тикера, облигации, фонда) между
+          двумя датами + разница индекса между теми же датами
+        </p>
       </div>
+      <Footer>
+        <a href="/">Home</a>
+      </Footer>
     </>
   );
 }

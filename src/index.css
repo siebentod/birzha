@@ -12,6 +12,12 @@
   .bg-primary {
     background-color: #800000;
   }
+  .secondary {
+    color: #f2e8c6;
+  }
+  .bg-secondary {
+    background-color: #f2e8c6;
+  }
   .custom-underline {
     position: relative;
   }

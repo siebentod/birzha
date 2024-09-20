@@ -1,8 +1,7 @@
-function Footer() {
+function Footer({ children }) {
   return (
     <footer>
-      <a href="https://github.com/siebentod/birzha">Github</a> |{' '}
-      <a href="/about">About</a>
+      {children} | <a href="https://github.com/siebentod/birzha">Github</a>
     </footer>
   );
 }

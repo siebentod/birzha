@@ -387,7 +387,9 @@ function App() {
           </form>
         </div>
       </main>
-      <Footer />
+      <Footer>
+        <a href="/about">About</a>
+      </Footer>
     </>
   );
 }
