@@ -6,9 +6,20 @@ import image2 from '../public/image2.png';
 import image from '../public/image.png';
 import './index.css';
 
+const date = new Date();
+// const date1 = `${date.getFullYear()}-01`;
+const date1 = '2024-01';
+let date2 = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+  2,
+  '0'
+)}`;
+// if (date1 === date2) {
+//   date2 = `${date.getFullYear() - 1}-01`;
+// }
+
 const initialState = {
-  date1: '2021-07',
-  date2: '2024-07',
+  date1: date1,
+  date2: date2,
   newDate1: '',
   newDate2: '',
   price1: null,
