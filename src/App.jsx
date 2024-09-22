@@ -1,10 +1,11 @@
+// import './reset.css';
+import './index.css';
 import './App.scss';
 import { Helmet } from 'react-helmet';
-import Footer from './Footer';
 import { useReducer } from 'react';
-import image2 from '../public/image2.png';
-import image from '../public/image.png';
-import './index.css';
+import Footer from './Footer';
+import image2 from '../public/image2.webp';
+import image from '../public/image.webp';
 
 const date = new Date();
 // const date1 = `${date.getFullYear()}-01`;
@@ -170,7 +171,7 @@ function App() {
         }
         if (i >= 6) {
           // throw new Error(`Данные за ${date.slice(-2)} не найдены`);
-          dispatch({ type: 'loadedWithError', payload: 'noData' });
+          // dispatch({ type: 'loadedWithError', payload: 'noData' });
           console.log(`Данные за ${date.slice(0, -3)} не найдены`);
           // console.log('date', date);
           return [null, date];
@@ -194,6 +195,10 @@ function App() {
       console.log('price2: ', price2);
       console.log('newdates: ', newDate1, newDate2);
       try {
+        if (price1 === null && price2 === null) {
+          console.log('Invalid Ticker');
+          throw new Error('Invalid Ticker');
+        }
         let index = await indexFunc(newDate1, newDate2);
         dispatch({
           type: 'setPrices',
@@ -210,11 +215,12 @@ function App() {
         dispatch({ type: 'fatalError', payload: 'Фатальная ошибка' });
       }
     } catch (err) {
-      dispatch({
-        type: 'loadedWithError',
-        payload: err.message,
-        // todo СЕЙЧАС ВСЕ РАБОТАЕТ НЕПРАВИЛЬНО, НУЖНО СДЕЛАТЬ УЛЬТИМАТИВНУЮ ОШИБКУ ЕСЛИ НЕ НАХОДИТСЯ ОДНА ИЗ ДАТ
-      });
+      if (status !== 'fatalError')
+        dispatch({
+          type: 'loadedWithError',
+          payload: err.message,
+          // todo СЕЙЧАС ВСЕ РАБОТАЕТ НЕПРАВИЛЬНО, НУЖНО СДЕЛАТЬ УЛЬТИМАТИВНУЮ ОШИБКУ ЕСЛИ НЕ НАХОДИТСЯ ОДНА ИЗ ДАТ
+        });
     }
   }
 
