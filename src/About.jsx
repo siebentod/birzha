@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet';
 import Footer from './Footer';
+import { Link } from 'react-router-dom';
 
 function About() {
   return (
@@ -15,7 +16,7 @@ function About() {
         </p>
       </div>
       <Footer>
-        <a href="/">Home</a>
+        <Link to="/">Home</Link>
       </Footer>
     </>
   );

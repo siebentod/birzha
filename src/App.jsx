@@ -6,6 +6,7 @@ import { useReducer } from 'react';
 import Footer from './Footer';
 import image2 from '../public/image2.webp';
 import image from '../public/image.webp';
+import { Link } from 'react-router-dom';
 
 const date = new Date();
 // const date1 = `${date.getFullYear()}-01`;
@@ -405,7 +406,7 @@ function App() {
         </div>
       </main>
       <Footer>
-        <a href="/about">About</a>
+        <Link to="/about">About</Link>
       </Footer>
     </>
   );
