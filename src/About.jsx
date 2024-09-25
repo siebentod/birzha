@@ -11,7 +11,7 @@ function About() {
       </Helmet>
       <div className="flex flex-col justify-center items-center h-[100dvh]">
         <p className="max-w-screen-sm text-white">
-          Сравнение стоимости акции (или другого тикера, облигации, фонда) между
+          Сравнение стоимости акции (или другого тикера: облигации, фонда) между
           двумя датами + разница индекса между теми же датами
         </p>
       </div>

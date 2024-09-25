@@ -1,6 +1,7 @@
 // import './reset.css';
 import './index.css';
 import './App.scss';
+import { Helmet } from 'react-helmet';
 import { useReducer } from 'react';
 import Footer from './Footer';
 import image2 from '../public/image2.webp';
@@ -255,6 +256,9 @@ function App() {
 
   return (
     <>
+      <Helmet>
+        <title>Сравнение стоимости между датами</title>
+      </Helmet>
       <main className="h-dvh max-w-xl m-auto relative flex flex-col items-center justify-center">
         <div className="display grid min-h-[30%] w-4/5 shadow-md m-3 p-4">
           {status === 'initial' && (
