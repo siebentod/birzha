@@ -7,7 +7,6 @@ function About() {
     <>
       <Helmet>
         <title>About</title>
-        <meta name="description" content="Simple Do-Nothing App" />
       </Helmet>
       <div className="flex flex-col justify-center items-center h-[100dvh]">
         <p className="max-w-screen-sm text-white">
