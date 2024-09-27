@@ -260,7 +260,7 @@ function App() {
         <title>Сравнение стоимости между датами</title>
       </Helmet>
       <main className="h-dvh max-w-xl m-auto relative flex flex-col items-center justify-center">
-        <div className="display grid min-h-[30%] w-4/5 shadow-md m-3 p-4">
+        <div className="display grid min-h-[30%] w-4/5 shadow-md m-3 p-4 rounded-lg">
           {status === 'initial' && (
             <div className="relative h-full flex items-center justify-center">
               <img
@@ -344,7 +344,7 @@ function App() {
           )}
         </div>
 
-        <div className="form grid m-3 p-4 w-4/5 min-h-[25%] shadow-md">
+        <div className="form grid m-3 p-4 w-4/5 min-h-[25%] shadow-md rounded-lg">
           <form onSubmit={(e) => e.preventDefault()}>
             <div className="form__inputs my-1 grid grid-cols-[max-content_auto] justify-center text-center">
               <p className="mx-1 my-0.5 text-[15px]">Тикер</p>
