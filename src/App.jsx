@@ -3,104 +3,9 @@ import './index.css';
 import './App.scss';
 import { Helmet } from 'react-helmet';
 import { useReducer } from 'react';
-import Footer from './Footer';
-import image2 from '../public/image2.webp';
-import image from '../public/image.webp';
-import { Link } from 'react-router-dom';
-
-const date = new Date();
-// const date1 = `${date.getFullYear()}-01`;
-const date1 = '2023-12';
-let date2 = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
-  2,
-  '0'
-)}`;
-// if (date1 === date2) {
-//   date2 = `${date.getFullYear() - 1}-01`;
-// }
-
-const initialState = {
-  date1: date1,
-  date2: date2,
-  newDate1: '',
-  newDate2: '',
-  price1: null,
-  price2: null,
-  ticker: 'GAZP',
-  index: null,
-  status: 'initial', //loading, loaded, error
-};
-
-function reducer(state, action) {
-  switch (action.type) {
-    case 'setTicker':
-      return {
-        ...state,
-        ticker: action.payload,
-      };
-    case 'loading':
-      return {
-        ...state,
-        status: 'loading',
-        newDate1: initialState.newDate1,
-        newDate2: initialState.newDate2,
-        price1: initialState.price1,
-        price2: initialState.price2,
-        index: initialState.index,
-      };
-    case 'setDate1':
-      return {
-        ...state,
-        date1: action.payload,
-      };
-    case 'setDate2':
-      return {
-        ...state,
-        date2: action.payload,
-      };
-    case 'getFirstTicker':
-      return {
-        ...state,
-        price1: action.payload.price1,
-        newDate1: action.payload.newDate1,
-      };
-    case 'getSecondTicker':
-      return {
-        ...state,
-        price2: action.payload.price2,
-        newDate2: action.payload.newDate2,
-      };
-    case 'setPrices':
-      return {
-        ...state,
-        price1: action.payload.price1,
-        newDate1: action.payload.newDate1,
-        price2: action.payload.price2,
-        newDate2: action.payload.newDate2,
-        index: action.payload.index,
-        status: state.status === 'loading' ? 'loaded' : 'loadedWithError',
-      };
-    case 'successfull':
-      return {
-        ...state,
-        status: 'loaded',
-      };
-    case 'loadedWithError':
-      return {
-        ...state,
-        status: 'loadedWithError',
-        message: action.payload,
-      };
-    case 'fatalError':
-      return {
-        ...state,
-        status: 'fatalError',
-        message: action.payload,
-      };
-    default:
-      throw new Error('Action unknown');
-  }
-}
+import LinksIcons from './LinksIcons';
+import Display from './Display';
+import { initialState, reducer } from './lib';
 
 const BASE_URL = 'https://iss.moex.com/iss/history/engines/stock';
 
@@ -252,97 +157,22 @@ function App() {
   //   getMoexTickerData(ticker, date1, date2);
   // }, []);
 
-  const difference = (((+price2 - +price1) / price1) * 100).toFixed(2);
-
   return (
     <>
       <Helmet>
         <title>Сравнение стоимости между датами</title>
       </Helmet>
-      <main className="h-dvh max-w-xl m-auto relative flex flex-col items-center justify-center">
-        <div className="display grid min-h-[30%] w-4/5 shadow-md m-3 p-4 rounded-lg">
-          {status === 'initial' && (
-            <div className="relative h-full flex items-center justify-center">
-              <img
-                src={image2}
-                className="absolute h-full justify-self-center"
-              />
-            </div>
-          )}
-          {status === 'loading' && (
-            <div className="relative h-full flex items-center justify-center">
-              <img
-                src={image2}
-                className="absolute h-full justify-self-center"
-              />
-              <p className="z-10 flex items-center justify-center inset-0 text-stroke primary text-4xl">
-                Загрузка...
-              </p>
-            </div>
-          )}
-          {status === 'fatalError' && (
-            <div className="flex flex-col relative">
-              <div className="relative flex items-center justify-center h-full">
-                <img src={image} className="absolute h-full" />
-              </div>
-              <p className="text-2xl text-center">{message}</p>
-            </div>
-          )}
-          {(status === 'loaded' || status === 'loadedWithError') && (
-            <div className="m-auto">
-              <p className="my-1">
-                Стоимость <span className="blue">{ticker}</span> на {newDate1}:{' '}
-                {price1 ? (
-                  <>
-                    <span className="blue">{price1}</span>
-                    <span className="small">₽</span>
-                  </>
-                ) : (
-                  <span className="red">Нет данных!</span>
-                )}
-                <br />
-                <span className="invisible">Стоимость {ticker} </span>на{' '}
-                {newDate2}:{' '}
-                {price2 ? (
-                  <>
-                    <span className="blue">{price2}</span>
-                    <span className="small">₽</span>
-                  </>
-                ) : (
-                  <span className="red">Нет данных!</span>
-                )}
-              </p>
-              <p className="my-1">
-                Разница:{' '}
-                {price1 && price2 ? (
-                  <span className={difference < 0 ? 'red' : 'green'}>
-                    {difference}%
-                  </span>
-                ) : (
-                  <span className="red">Нет данных!</span>
-                )}
-              </p>
-              <p className="my-1">
-                Индекс Мосбиржи:{' '}
-                {index ? (
-                  <span className={index < 0 ? 'red' : 'green'}>{index}%</span>
-                ) : (
-                  <span className="red">Нет данных!</span>
-                )}
-                {/* <br />
-              BTC:{' '}
-              <span style={{ color: index < 0 ? 'red' : 'green' }}>
-                {btc}%
-              </span>
-              <br />
-              S&P 500:{' '}
-              <span style={{ color: index < 0 ? 'red' : 'green' }}>
-                {sp500}%
-              </span> */}
-              </p>
-            </div>
-          )}
-        </div>
+      <main className="h-dvh max-w-xl m-auto relative flex flex-col items-center justify-center min-h-min">
+        <Display
+          status={status}
+          message={message}
+          ticker={ticker}
+          index={index}
+          newDate1={newDate1}
+          price1={price1}
+          newDate2={newDate2}
+          price2={price2}
+        />
 
         <div className="form grid m-3 p-4 w-4/5 min-h-[25%] shadow-md rounded-lg">
           <form onSubmit={(e) => e.preventDefault()}>
@@ -403,9 +233,7 @@ function App() {
           </form>
         </div>
       </main>
-      <Footer>
-        <Link to="/about">About</Link>
-      </Footer>
+      <LinksIcons color="text-[#f2e8c6]" />
     </>
   );
 }

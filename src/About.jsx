@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet';
-import Footer from './Footer';
-import { Link } from 'react-router-dom';
+import LinksIcons from './LinksIcons';
 
 function About() {
   return (
@@ -14,9 +13,7 @@ function About() {
           двумя датами + разница индекса между теми же датами
         </p>
       </div>
-      <Footer>
-        <Link to="/">Home</Link>
-      </Footer>
+      <LinksIcons noabout home />
     </>
   );
 }
