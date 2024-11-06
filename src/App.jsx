@@ -1,6 +1,5 @@
 // import './reset.css';
 import './index.css';
-import './App.scss';
 import { Helmet } from 'react-helmet';
 import { useReducer } from 'react';
 import LinksIcons from './LinksIcons';
@@ -174,12 +173,13 @@ function App() {
           price2={price2}
         />
 
-        <div className="form grid m-3 p-4 w-4/5 min-h-[25%] shadow-md rounded-lg">
+        <div className="bg-[#f2e8c6] border border-[#4f0000] grid m-3 p-4 w-4/5 min-h-[25%] shadow-md rounded-lg">
           <form onSubmit={(e) => e.preventDefault()}>
-            <div className="form__inputs my-1 grid grid-cols-[max-content_auto] justify-center text-center">
+            <div className="my-1 grid grid-cols-[max-content_auto] justify-center text-center">
               <p className="mx-1 my-0.5 text-[15px]">Тикер</p>
               <input
                 type="text"
+                className="input"
                 value={ticker}
                 onChange={(e) =>
                   dispatch({ type: 'setTicker', payload: e.target.value })
@@ -188,6 +188,7 @@ function App() {
               <p className="mx-1 my-0.5 text-[15px]">Дата 1</p>
               <input
                 type="text"
+                className="input"
                 value={date1}
                 onChange={(e) =>
                   dispatch({ type: 'setDate1', payload: e.target.value })
@@ -196,18 +197,19 @@ function App() {
               <p className="mx-1 my-0.5 text-[15px]">Дата 2</p>
               <input
                 type="text"
+                className="input"
                 value={date2}
                 onChange={(e) =>
                   dispatch({ type: 'setDate2', payload: e.target.value })
                 }
               ></input>
             </div>
-            <p className="instruction text-center">
+            <p className="text-[0.938rem] text-center">
               Введите месяц (2022-05) или день (2022-05-05)
             </p>
             <button
               onClick={() => getMoexTickerData(ticker, date1, date2)}
-              className="block m-auto mt-2.5 py-2.5 px-5 rounded-lg transition"
+              className="text-[#200707de] bg-[#dad4b5] hover:bg-[#cfc9aa] block m-auto mt-2.5 py-2.5 px-5 rounded-lg transition"
             >
               Get Price
             </button>

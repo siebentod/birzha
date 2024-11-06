@@ -55,31 +55,32 @@ function Display({
 
   return (
     <>
-      <div className="display grid min-h-[30%] w-4/5 shadow-md m-3 p-4 rounded-lg">
+      <div className="bg-[#f2e8c6] border border-[#4f0000] grid min-h-[165px] w-4/5 shadow-md m-3 p-4 rounded-lg">
         {status === 'initial' && (
-          <div className="relative h-full flex items-center justify-center">
+          <div className="relative h-full flex items-center justify-center select-none">
             <img src={image2} className="absolute h-full justify-self-center" />
           </div>
         )}
         {status === 'loading' && (
-          <div className="relative h-full flex items-center justify-center">
+          <div className="relative h-full flex items-center justify-center select-none">
             <img src={image2} className="absolute h-full justify-self-center" />
-            <p className="z-10 flex items-center justify-center inset-0 text-stroke primary text-5xl">
+            <p className="z-10 flex items-center justify-center inset-0 text-stroke text-[#800000] text-5xl">
               Загрузка...
             </p>
           </div>
         )}
         {status === 'fatalError' && (
-          <div className="flex flex-col relative">
+          <div className="flex flex-col relative select-none">
             <div className="relative flex items-center justify-center h-full">
               <img src={image} className="absolute h-full" />
             </div>
             <p className="text-2xl text-center">{message}</p>
           </div>
         )}
+
         {(status === 'loaded' || status === 'loadedWithError') && (
           <div className="m-auto">
-            <p className="my-1">
+            <p className="my-0.5">
               Стоимость <span className="blue">{ticker}</span> на {newDate1}:{' '}
               {price1 ? (
                 <>
@@ -101,7 +102,7 @@ function Display({
                 <span className="red">Нет данных!</span>
               )}
             </p>
-            <p className="my-1">
+            <p className="my-0">
               Разница:{' '}
               {price1 && price2 ? (
                 <span className={color}>
@@ -112,7 +113,7 @@ function Display({
                 <span className="red">Нет данных!</span>
               )}
             </p>
-            <p className="my-1">
+            <p className="my-0">
               Индекс Мосбиржи:{' '}
               {index ? (
                 <span className={indexColor}>

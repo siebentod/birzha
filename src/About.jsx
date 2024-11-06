@@ -8,12 +8,12 @@ function About() {
         <title>About</title>
       </Helmet>
       <div className="flex flex-col justify-center items-center h-[100dvh]">
-        <p className="max-w-screen-sm text-white">
+        <div className="grid max-w-screen-sm shadow-md m-3 py-7 px-10 rounded-lg bg-[#f2e8c6]">
           Сравнение стоимости акции (или другого тикера: облигации, фонда) между
-          двумя датами + разница индекса между теми же датами
-        </p>
+          двумя датами + разница индекса между теми же датами.
+        </div>
       </div>
-      <LinksIcons noabout home />
+      <LinksIcons noabout home color="text-[#f2e8c6]" />
     </>
   );
 }
