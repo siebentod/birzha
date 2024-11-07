@@ -64,7 +64,7 @@ function Display({
         {status === 'loading' && (
           <div className="relative h-full flex items-center justify-center select-none">
             <img src={image2} className="absolute h-full justify-self-center" />
-            <p className="z-10 flex items-center justify-center inset-0 text-stroke text-[#800000] text-5xl">
+            <p className="z-10 flex items-center justify-center inset-0 text-stroke text-[#800000] text-5xl font-semibold">
               Загрузка...
             </p>
           </div>
