@@ -8,7 +8,7 @@ function LinksIcons({
   home = false,
 }) {
   return (
-    <div className={`fixed ${pos} ${color} flex gap-1`}>
+    <div className={`fixed ${pos} ${color} flex gap-1 icons`}>
       {home ? (
         <Link to="/">
           <FaHome />

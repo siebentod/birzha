@@ -81,7 +81,8 @@ function Display({
         {(status === 'loaded' || status === 'loadedWithError') && (
           <div className="m-auto">
             <p className="my-0.5">
-              Стоимость <span className="blue">{ticker}</span> на {newDate1}:{' '}
+              <span className="hide-on-mobile">Стоимость </span>
+              <span className="blue">{ticker}</span> на {newDate1}:{' '}
               {price1 ? (
                 <>
                   <span className="blue">{price1}</span>
@@ -91,8 +92,11 @@ function Display({
                 <span className="red">Нет данных!</span>
               )}
               <br />
-              <span className="invisible">Стоимость {ticker} </span>на{' '}
-              {newDate2}:{' '}
+              <span className="invisible">
+                <span className="hide-on-mobile">Стоимость </span>
+                {ticker}{' '}
+              </span>
+              на {newDate2}:{' '}
               {price2 ? (
                 <>
                   <span className="blue">{price2}</span>
